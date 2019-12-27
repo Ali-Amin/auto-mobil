@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "182566604075",
+    "firebase_url": "https://grad-f304f.firebaseio.com",
+    "project_id": "grad-f304f",
+    "storage_bucket": "grad-f304f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:182566604075:android:aec0f5c4bda1180a01896e",
+        "android_client_info": {
+          "package_name": "com.example.grad"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "182566604075-4578tivhof4bugun9oeuhamtrrl5i96c.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.grad",
+            "certificate_hash": "63bd769d1ab12b53cc7692bbf6937f0944d51609"
+          }
+        },
+        {
+          "client_id": "182566604075-97236vvvdn3d0h86u4dsno975sb98vth.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBRBgQNPx2QdLpGoD75AyrxDSjEYFll3L0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "182566604075-97236vvvdn3d0h86u4dsno975sb98vth.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
