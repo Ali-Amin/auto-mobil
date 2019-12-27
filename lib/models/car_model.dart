@@ -1,18 +1,18 @@
 import 'package:flutter/foundation.dart';
 
-class Brand {
+class CarModel {
   final String _name;
   final String _photoUrl;
 
   String get name => _name;
   String get photoUrl => _photoUrl;
 
-  Brand({@required String name, @required String photoUrl})
+  CarModel({@required String name, @required String photoUrl})
       : _name = name,
         _photoUrl = photoUrl;
 
-  factory Brand.fromJson(Map<dynamic, dynamic> json) {
+  factory CarModel.fromJson(Map<dynamic, dynamic> json) {
     if (json == null) return null;
-    return Brand(name: json['name'], photoUrl: json['photoUrl']);
+    return CarModel(name: json['name'], photoUrl: json['photoUrl']);
   }
 }
