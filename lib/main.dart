@@ -16,9 +16,11 @@ class MyApp extends StatelessWidget {
         routes: {"/": _buildHome},
         theme: ThemeData(
           primaryColor: Color(0xFF1F1E5A),
-          accentColor: Color(0xFFFFBC00),
-          primaryColorLight: Color(0xFF464A8D),
-          buttonColor: Color(0xFF00D0FC),
+          accentColor: Color(0xFFFFDE00),
+          primaryColorDark: Color(0xFFFFA500),
+          primaryColorLight: Color(0xFF575B9E),
+          buttonColor: Color(0xFF72E4FF),
+          cardColor: Color(0xFF00BEF1),
         ),
       ),
     );
