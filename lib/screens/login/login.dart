@@ -60,7 +60,25 @@ class _LoginScreenState extends State<LoginScreen> {
               obscure: true,
               iconData: Icons.lock,
             ),
-            SizedBox(height: 100),
+            SizedBox(height: 35),
+                        Align(
+              alignment: Alignment.center,
+              child: StreamBuilder<String>(
+                  stream: bloc.error$,
+                  builder: (context, snapshot) {
+                    return Visibility(
+                      visible: snapshot.hasData,
+                      child: Text(
+                        snapshot.data ?? "",
+                        style: TextStyle(
+                          color: Colors.red[500],
+                        ),
+                      ),
+                    );
+                  }),
+            ),
+            SizedBox(height: 35),
+
             CustomButton(
               text: "Sign In",
               colors: [
@@ -75,11 +93,14 @@ class _LoginScreenState extends State<LoginScreen> {
             SizedBox(height: 20),
             CustomButton(
               text: "Create an Account",
-              onPressed: () => Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (_) => SignUpScreen(),
-                ),
-              ),
+              onPressed: () {
+                bloc.clearErrors();
+                return Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => SignUpScreen(),
+                  ),
+                );
+              },
             ),
           ],
         ),
