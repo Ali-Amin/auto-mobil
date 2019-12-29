@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:grad/blocs/bloc.dart';
-import 'package:grad/screens/home/home.dart';
+import 'package:grad/screens/problem/problem.dart';
 import 'package:grad/screens/screens.dart';
 import 'package:provider/provider.dart';
 
@@ -15,7 +15,10 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         routes: {"/": _buildHome},
         theme: ThemeData(
-          primarySwatch: Colors.blue,
+          primaryColor: Color(0xFF1F1E5A),
+          accentColor: Color(0xFFFFBC00),
+          primaryColorLight: Color(0xFF464A8D),
+          buttonColor: Color(0xFF00D0FC),
         ),
       ),
     );
@@ -38,7 +41,7 @@ class MyApp extends StatelessWidget {
           case AuthState.Unauthenticated:
             return LoginScreen();
           case AuthState.Authenticated:
-            return HomeScreen();
+            return ProblemScreen();
           default:
             return Scaffold(
               body: Center(
