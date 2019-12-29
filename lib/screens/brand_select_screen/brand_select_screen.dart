@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:grad/blocs/bloc.dart';
+import 'package:grad/common/custom_scaffold.dart';
 import 'package:grad/models/brand.dart';
 import 'package:grad/screens/problem/problem.dart';
 import 'package:provider/provider.dart';
@@ -8,7 +9,7 @@ class BrandSelectScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Bloc bloc = Provider.of(context);
-    return Scaffold(
+    return CustomScaffold(
       body: Center(
         child: StreamBuilder<List<Brand>>(
             stream: bloc.brands$,

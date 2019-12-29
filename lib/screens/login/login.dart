@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:grad/blocs/bloc.dart';
+import 'package:grad/common/custom_button.dart';
+import 'package:grad/common/custom_scaffold.dart';
+import 'package:grad/common/custom_text_field.dart';
 import 'package:grad/screens/screens.dart';
 import 'package:provider/provider.dart';
 
@@ -29,34 +32,55 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final Bloc bloc = Provider.of(context);
-    return Scaffold(
+    return CustomScaffold(
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: ListView(
+          padding: const EdgeInsets.only(top: 100),
           children: <Widget>[
-            TextField(
+            Align(
+              alignment: Alignment.topCenter,
+              child: Text(
+                "Sign In",
+                style: TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            SizedBox(height: 100),
+            CustomTextField(
               controller: emailCont,
-              decoration: InputDecoration(hintText: "Email"),
+              hint: "Email",
+              iconData: Icons.email,
             ),
-            TextField(
+            CustomTextField(
               controller: passCont,
-              decoration: InputDecoration(hintText: "Password"),
+              hint: "Password",
+              obscure: true,
+              iconData: Icons.lock,
             ),
-            MaterialButton(
-              child: Text("Sign In"),
+            SizedBox(height: 100),
+            CustomButton(
+              text: "Sign In",
+              colors: [
+                Theme.of(context).accentColor,
+                Theme.of(context).primaryColorDark
+              ],
               onPressed: () => bloc.signIn(
                 email: emailCont.text,
                 password: passCont.text,
               ),
             ),
-            MaterialButton(
-              child: Text("Sign Up"),
+            SizedBox(height: 20),
+            CustomButton(
+              text: "Create an Account",
               onPressed: () => Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (_) => SignUpScreen(),
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),

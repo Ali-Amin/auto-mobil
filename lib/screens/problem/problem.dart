@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:grad/common/custom_scaffold.dart';
 import 'package:grad/screens/car_select_screen/car_select_screen.dart';
 
 class ProblemScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return CustomScaffold(
       body: Center(
         child: ListView(
           physics: BouncingScrollPhysics(),

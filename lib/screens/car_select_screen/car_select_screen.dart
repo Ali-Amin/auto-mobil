@@ -1,38 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:grad/common/custom_scaffold.dart';
 
 class CarSelectScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return CustomScaffold(
       body: Center(
         child: ListView(
+          physics: BouncingScrollPhysics(),
           padding:
               EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.05),
           children: <Widget>[
-            CarCard(),
-            CarCard(),
-            CarCard(),
-            ProductCard(
-              width: 255,
-              height: 175,
-              color: Colors.blueGrey,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Container(
-                    width: 120,
-                    child: HotProductInfo(),
-                  ),
-                  Container(
-                    width: 160,
-                    height: 140,
-                    alignment: Alignment.centerLeft,
-                    child: Image.network(
-                      "https://firebasestorage.googleapis.com/v0/b/grad-f304f.appspot.com/o/addcar3.png?alt=media&token=71a233e2-c5c2-4d26-adac-524c8b769c29",
-                    ),
-                  ),
-                ],
-              ),
+            CarCard(
+              make: "lorem",
+              model: "epsum",
+              photoUrl:
+                  "https://www.hyundai.com/content/dam/hyundai/au/en/models/tucson/2019/06/active-x/MY18-Tucson-Front34-ActiveX-PureWhite_1000x667.png",
             ),
           ],
         ),
@@ -42,30 +25,37 @@ class CarSelectScreen extends StatelessWidget {
 }
 
 class CarCard extends StatelessWidget {
+  final String make;
+  final String model;
+  final String photoUrl;
   const CarCard({
     Key key,
+    @required this.make,
+    @required this.model,
+    @required this.photoUrl,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ProductCard(
+    return CustomCard(
       width: 255,
       height: 175,
-      color: Colors.blueGrey,
+      color: Theme.of(context).accentColor,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           Container(
-            width: 120,
-            child: HotProductInfo(),
+            width: 160,
+            child: CarInfo(
+              make: make,
+              model: model,
+            ),
           ),
           Container(
-            width: 160,
+            width: 200,
             height: 140,
             alignment: Alignment.centerLeft,
-            child: Image.network(
-              "https://www.hyundai.com/content/dam/hyundai/au/en/models/tucson/2019/06/active-x/MY18-Tucson-Front34-ActiveX-PureWhite_1000x667.png",
-            ),
+            child: Image.network(photoUrl),
           ),
         ],
       ),
@@ -73,8 +63,8 @@ class CarCard extends StatelessWidget {
   }
 }
 
-class ProductCard extends StatelessWidget {
-  ProductCard({
+class CustomCard extends StatelessWidget {
+  CustomCard({
     Key key,
     @required this.child,
     @required this.width,
@@ -133,7 +123,16 @@ class _ArrowIcon extends StatelessWidget {
   }
 }
 
-class HotProductInfo extends StatelessWidget {
+class CarInfo extends StatelessWidget {
+  final String make;
+  final String model;
+
+  const CarInfo({
+    Key key,
+    @required this.make,
+    @required this.model,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -144,11 +143,11 @@ class HotProductInfo extends StatelessWidget {
           padding: const EdgeInsets.only(top: 8, left: 12),
           child: FittedBox(
             child: Text(
-              "Hyundai",
+              make,
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                color: Colors.white,
+                color: Colors.black,
                 fontWeight: FontWeight.w700,
                 fontSize: 20,
               ),
@@ -160,11 +159,11 @@ class HotProductInfo extends StatelessWidget {
           padding: const EdgeInsets.only(left: 12),
           height: 30,
           child: Text(
-            "Tuscon",
+            model,
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w300,
-              color: Colors.white.withAlpha(200),
+              color: Colors.black.withAlpha(200),
             ),
           ),
         )

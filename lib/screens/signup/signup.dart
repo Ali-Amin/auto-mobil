@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:grad/blocs/bloc.dart';
+import 'package:grad/common/custom_scaffold.dart';
 import 'package:provider/provider.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -28,7 +29,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     final Bloc bloc = Provider.of(context);
-    return Scaffold(
+    return CustomScaffold(
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
