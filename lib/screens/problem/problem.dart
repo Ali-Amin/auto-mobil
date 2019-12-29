@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:grad/blocs/bloc.dart';
 import 'package:grad/common/custom_scaffold.dart';
+import 'package:grad/screens/car_select_screen/car_select_screen.dart';
+import 'package:provider/provider.dart';
 
 class ProblemScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomScaffold(
       body: Center(
-        child: GridView(
-          gridDelegate:
-              SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+        child: ListView(
           physics: BouncingScrollPhysics(),
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
           shrinkWrap: true,
@@ -32,6 +33,7 @@ class ProblemScreen extends StatelessWidget {
                   height: 5,
                   decoration: BoxDecoration(
                     color: Theme.of(context).buttonColor,
+                    borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
                         color: Theme.of(context).buttonColor,
@@ -41,14 +43,6 @@ class ProblemScreen extends StatelessWidget {
                   ),
                 )
               ],
-            ),
-            Container(
-              alignment: Alignment(0.6, -0.8),
-              child: Icon(
-                Icons.settings,
-                size: 100,
-                color: Theme.of(context).buttonColor,
-              ),
             ),
             ProblemCard(
                 text: "Gear Box",
@@ -129,24 +123,37 @@ class ProblemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomCard(
-      height: 200,
-      colors: colors,
-      child: Column(
-        children: <Widget>[
-          Container(
-            padding: const EdgeInsets.only(top: 12, right: 20, left: 20),
-            alignment: Alignment.center,
-            child: ProblemInfo(
-              text: text,
+    return InkWell(
+      onTap: () {
+        // final Bloc bloc = Provider.of(context);
+        // bloc.selectProblem(text);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => CarSelectScreen(),
+          ),
+        );
+      },
+      child: CustomCard(
+        height: 200,
+        colors: colors,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            Container(
+              padding: const EdgeInsets.only(top: 12, right: 20, left: 20),
+              alignment: Alignment.center,
+              child: ProblemInfo(
+                text: text,
+              ),
             ),
-          ),
-          Container(
-            alignment: Alignment.center,
-            height: 90,
-            child: Image.network(photoUrl),
-          ),
-        ],
+            Container(
+              alignment: Alignment.center,
+              height: 130,
+              child: Image.network(photoUrl),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -166,38 +173,34 @@ class CustomCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {},
-      child: Container(
-        margin: const EdgeInsets.only(top: 20, right: 16),
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-                color: colors == null
-                    ? Theme.of(context).buttonColor
-                    : colors.first,
-                blurRadius: 2),
-          ],
-          gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: colors ??
-                  [
-                    Theme.of(context).buttonColor,
-                    Theme.of(context).cardColor,
-                  ]),
-          borderRadius: BorderRadius.circular(20),
-        ),
-        height: height,
-        child: Stack(
-          children: <Widget>[
-            child,
-            Align(
-              alignment: Alignment.bottomRight,
-              child: _ArrowIcon(),
-            ),
-          ],
-        ),
+    return Container(
+      margin: const EdgeInsets.only(top: 20, right: 16),
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+              color:
+                  colors == null ? Theme.of(context).buttonColor : colors.first,
+              blurRadius: 2),
+        ],
+        gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: colors ??
+                [
+                  Theme.of(context).buttonColor,
+                  Theme.of(context).cardColor,
+                ]),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      height: height,
+      child: Stack(
+        children: <Widget>[
+          child,
+          Align(
+            alignment: Alignment.bottomRight,
+            child: _ArrowIcon(),
+          ),
+        ],
       ),
     );
   }

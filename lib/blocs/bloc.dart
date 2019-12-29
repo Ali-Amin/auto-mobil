@@ -15,7 +15,7 @@ class Bloc {
   BehaviorSubject<AuthState> _authState$ =
       BehaviorSubject<AuthState>.seeded(AuthState.Unauthenticated);
   BehaviorSubject<User> _user$ = BehaviorSubject<User>();
-
+  BehaviorSubject<String> _problem$ = BehaviorSubject<String>();
   BehaviorSubject<String> _error$ = BehaviorSubject<String>();
   BehaviorSubject<String> _fullName$ = BehaviorSubject<String>();
   BehaviorSubject<String> _phoneNumber$ = BehaviorSubject<String>();
@@ -120,6 +120,10 @@ class Bloc {
     _error$.sink.add(null);
   }
 
+  void selectProblem(String problem) {
+    _problem$.sink.add(problem);
+  }
+
   void dispose() {
     _authState$.close();
     _error$.close();
@@ -130,6 +134,7 @@ class Bloc {
     _email$.close();
     _gender$.close();
     _user$.close();
+    _problem$.close();
   }
 
   void _errorCheck() {
