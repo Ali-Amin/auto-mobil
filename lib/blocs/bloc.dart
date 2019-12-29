@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:grad/models/brand.dart';
+import 'package:grad/models/user.dart';
 import 'package:grad/services/firebase_auth.dart';
 import 'package:grad/services/firestore.dart';
 import 'package:rxdart/rxdart.dart';
@@ -13,6 +14,8 @@ class Bloc {
   /// `subjects`
   BehaviorSubject<AuthState> _authState$ =
       BehaviorSubject<AuthState>.seeded(AuthState.Unauthenticated);
+  BehaviorSubject<User> _user$ = BehaviorSubject<User>();
+
   BehaviorSubject<String> _error$ = BehaviorSubject<String>();
   BehaviorSubject<String> _fullName$ = BehaviorSubject<String>();
   BehaviorSubject<String> _phoneNumber$ = BehaviorSubject<String>();
@@ -33,11 +36,14 @@ class Bloc {
 
   Bloc() {
     _authService.onAuthStateChanged.listen(
-      (FirebaseUser user) {
-        if (user == null) {
+      (FirebaseUser fbUser) {
+        if (fbUser == null) {
           _authState$.sink.add(AuthState.Unauthenticated);
         } else {
           _authState$.sink.add(AuthState.Authenticated);
+          _fsService.getUserDocRef(fbUser.uid).snapshots().listen((doc) {
+            _user$.sink.add(User.fromJson(doc.data));
+          });
         }
       },
     );
@@ -123,6 +129,7 @@ class Bloc {
     _confirmPassword$.close();
     _email$.close();
     _gender$.close();
+    _user$.close();
   }
 
   void _errorCheck() {

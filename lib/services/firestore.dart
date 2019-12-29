@@ -6,6 +6,6 @@ class FirestoreAPI {
   Stream<QuerySnapshot> get brands$ => _fs.collection('carBrands').snapshots();
 
   DocumentReference getUserDocRef(String userUid) {
-    return _fs.collection('users').document('userUid');
+    return _fs.collection('users').document(userUid);
   }
 }
