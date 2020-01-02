@@ -8,4 +8,8 @@ class FirestoreAPI {
   DocumentReference getUserDocRef(String userUid) {
     return _fs.collection('users').document(userUid);
   }
+
+  CollectionReference getCarModels(String brandUid) {
+    return _fs.collection('carBrands').document(brandUid).collection('models');
+  }
 }

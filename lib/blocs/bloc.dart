@@ -1,7 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:grad/models/brand.dart';
+import 'package:grad/models/car.dart';
+import 'package:grad/models/car_model.dart';
 import 'package:grad/models/user.dart';
 import 'package:grad/services/firebase_auth.dart';
 import 'package:grad/services/firestore.dart';
@@ -15,6 +18,11 @@ class Bloc {
   BehaviorSubject<AuthState> _authState$ =
       BehaviorSubject<AuthState>.seeded(AuthState.Unauthenticated);
   BehaviorSubject<User> _user$ = BehaviorSubject<User>();
+  BehaviorSubject<Car> _selectedCar$ = BehaviorSubject<Car>();
+  BehaviorSubject<Brand> _selectedBrand$ = BehaviorSubject<Brand>();
+  BehaviorSubject<List<CarModel>> _carModels$ =
+      BehaviorSubject<List<CarModel>>();
+
   BehaviorSubject<String> _problem$ = BehaviorSubject<String>();
   BehaviorSubject<String> _error$ = BehaviorSubject<String>();
   BehaviorSubject<String> _fullName$ = BehaviorSubject<String>();
@@ -25,8 +33,12 @@ class Bloc {
   BehaviorSubject<String> _gender$ = BehaviorSubject<String>.seeded("Mr.");
 
   /// `observables`
+  Observable<User> get user$ => Observable(_user$.stream);
   Observable<AuthState> get authState$ => Observable(_authState$.stream);
   Observable<String> get error$ => Observable(_error$.stream);
+  Observable<List<CarModel>> get carModels$ => Observable(_carModels$.stream);
+  Observable<Car> get selectedCar$ => Observable(_selectedCar$.stream);
+  Observable<Brand> get selectedBrand$ => Observable(_selectedBrand$.stream);
   Observable<List<Brand>> get brands$ => Observable(
         _fsService.brands$.map(
           (query) =>
@@ -42,7 +54,9 @@ class Bloc {
         } else {
           _authState$.sink.add(AuthState.Authenticated);
           _fsService.getUserDocRef(fbUser.uid).snapshots().listen((doc) {
-            _user$.sink.add(User.fromJson(doc.data));
+            print(fbUser.uid);
+            final User user = User.fromJson(doc.data);
+            _user$.sink.add(user);
           });
         }
       },
@@ -124,6 +138,47 @@ class Bloc {
     _problem$.sink.add(problem);
   }
 
+  void selectCar(Car car) {
+    _selectedCar$.sink.add(car);
+  }
+
+  void selectBrand(Brand brand) async {
+    _selectedBrand$.sink.add(brand);
+    QuerySnapshot query =
+        await _fsService.getCarModels(brand.uid).getDocuments();
+    List<CarModel> models =
+        query.documents.map((doc) => CarModel.fromJson(doc.data)).toList();
+    _carModels$.sink.add(models);
+  }
+
+  Future<void> addCar({@required CarModel model}) async {
+    final User user = _user$.value;
+    final List<Car> userCars = user.cars;
+    final Car newCar = Car.from(_selectedBrand$.value, model);
+    userCars.add(newCar);
+    final Map<String, dynamic> payload = <String, dynamic>{
+      'cars': userCars
+          .map(
+            (car) => {
+              'brand': {
+                'name': car.brand.name,
+                'photoUrl': car.brand.photoUrl,
+                'uid': car.brand.uid,
+              },
+              'model': {
+                'name': car.model.name,
+                'photoUrl': car.model.photoUrl,
+                'uid': car.model.photoUrl,
+              }
+            },
+          )
+          .toList()
+    };
+    Future<void> x = _fsService.getUserDocRef(user.uid).updateData(payload);
+    _selectedCar$.sink.add(newCar);
+    return await x;
+  }
+
   void dispose() {
     _authState$.close();
     _error$.close();
@@ -135,6 +190,9 @@ class Bloc {
     _gender$.close();
     _user$.close();
     _problem$.close();
+    _selectedCar$.close();
+    _selectedBrand$.close();
+    _carModels$.close();
   }
 
   void _errorCheck() {

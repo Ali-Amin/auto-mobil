@@ -125,8 +125,8 @@ class ProblemCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        // final Bloc bloc = Provider.of(context);
-        // bloc.selectProblem(text);
+        final Bloc bloc = Provider.of(context);
+        bloc.selectProblem(text);
         Navigator.push(
           context,
           MaterialPageRoute(

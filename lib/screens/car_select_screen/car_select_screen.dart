@@ -1,24 +1,81 @@
 import 'package:flutter/material.dart';
+import 'package:grad/blocs/bloc.dart';
 import 'package:grad/common/custom_scaffold.dart';
+import 'package:grad/models/user.dart';
+import 'package:grad/screens/brand_select_screen/brand_select_screen.dart';
+import 'package:provider/provider.dart';
 
 class CarSelectScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final Bloc bloc = Provider.of(context);
     return CustomScaffold(
       body: Center(
-        child: ListView(
-          physics: BouncingScrollPhysics(),
-          padding:
-              EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.05),
-          children: <Widget>[
-            CarCard(
-              make: "lorem",
-              model: "epsum",
-              photoUrl:
-                  "https://www.hyundai.com/content/dam/hyundai/au/en/models/tucson/2019/06/active-x/MY18-Tucson-Front34-ActiveX-PureWhite_1000x667.png",
-            ),
-          ],
-        ),
+        child: StreamBuilder<User>(
+            stream: bloc.user$,
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return CircularProgressIndicator();
+              }
+              final User user = snapshot.data;
+              return ListView(
+                shrinkWrap: true,
+                physics: BouncingScrollPhysics(),
+                padding: EdgeInsets.symmetric(
+                    horizontal: MediaQuery.of(context).size.width * 0.04,
+                    vertical: 20),
+                children: [
+                  Column(
+                    children: <Widget>[
+                      Container(
+                        padding: const EdgeInsets.only(bottom: 12),
+                        alignment: Alignment.topCenter,
+                        child: Text(
+                          "Choose your vehicle",
+                          style: TextStyle(
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                      Container(
+                        width: double.infinity,
+                        height: 5,
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).buttonColor,
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Theme.of(context).buttonColor,
+                              blurRadius: 10,
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                  ...user.cars
+                      .map(
+                        (car) => Center(
+                          child: CarCard(
+                            model: car.model.name,
+                            make: car.brand.name,
+                            photoUrl: car.model.photoUrl,
+                          ),
+                        ),
+                      )
+                      .toList(),
+                  Center(
+                    child: CarCard(
+                        make: "Add   ",
+                        model: "Add a car",
+                        photoUrl:
+                            "https://clipartion.com/wp-content/uploads/2015/12/car-clipart-free-830x305.png"),
+                  ),
+                ],
+              );
+            }),
       ),
     );
   }
@@ -38,11 +95,14 @@ class CarCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomCard(
-      width: 255,
+      width: 400,
       height: 175,
-      color: Theme.of(context).accentColor,
+      colors: [
+        Theme.of(context).accentColor,
+        Theme.of(context).primaryColorDark
+      ],
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Container(
             width: 160,
@@ -69,21 +129,38 @@ class CustomCard extends StatelessWidget {
     @required this.child,
     @required this.width,
     @required this.height,
-    @required this.color,
+    this.colors,
   }) : super(key: key);
   final Widget child;
   final double width;
   final double height;
-  final Color color;
+  final List<Color> colors;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (_) => BrandSelectScreen()));
+      },
       child: Container(
-        margin: const EdgeInsets.only(top: 20, right: 16),
+        margin: const EdgeInsets.only(top: 20),
         decoration: BoxDecoration(
-          color: color,
+          boxShadow: [
+            BoxShadow(
+                color: colors == null
+                    ? Theme.of(context).buttonColor
+                    : colors.first,
+                blurRadius: 2),
+          ],
+          gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: colors ??
+                  [
+                    Theme.of(context).buttonColor,
+                    Theme.of(context).cardColor,
+                  ]),
           borderRadius: BorderRadius.circular(20),
         ),
         width: width,
@@ -137,6 +214,8 @@ class CarInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         Container(
           height: 100,
@@ -147,7 +226,7 @@ class CarInfo extends StatelessWidget {
               maxLines: 3,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                color: Colors.black,
+                color: Theme.of(context).primaryColor,
                 fontWeight: FontWeight.w700,
                 fontSize: 20,
               ),
@@ -157,13 +236,14 @@ class CarInfo extends StatelessWidget {
         Container(
           alignment: Alignment.bottomLeft,
           padding: const EdgeInsets.only(left: 12),
-          height: 30,
+          height: 20,
           child: Text(
             model,
+            maxLines: 3,
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w300,
-              color: Colors.black.withAlpha(200),
+              color: Theme.of(context).primaryColor.withAlpha(200),
             ),
           ),
         )
