@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:grad/models/appointment.dart';
 import 'package:grad/models/brand.dart';
 import 'package:grad/models/car.dart';
 import 'package:grad/models/car_model.dart';
@@ -22,7 +23,10 @@ class Bloc {
   BehaviorSubject<Brand> _selectedBrand$ = BehaviorSubject<Brand>();
   BehaviorSubject<List<CarModel>> _carModels$ =
       BehaviorSubject<List<CarModel>>();
-
+  BehaviorSubject<String> _comment$ = BehaviorSubject<String>();
+  BehaviorSubject<DateTime> _appointmentDate$ = BehaviorSubject<DateTime>();
+  BehaviorSubject<List<Appointment>> _userAppointments$ =
+      BehaviorSubject<List<Appointment>>();
   BehaviorSubject<String> _problem$ = BehaviorSubject<String>();
   BehaviorSubject<String> _error$ = BehaviorSubject<String>();
   BehaviorSubject<String> _fullName$ = BehaviorSubject<String>();
@@ -39,6 +43,12 @@ class Bloc {
   Observable<List<CarModel>> get carModels$ => Observable(_carModels$.stream);
   Observable<Car> get selectedCar$ => Observable(_selectedCar$.stream);
   Observable<Brand> get selectedBrand$ => Observable(_selectedBrand$.stream);
+  Observable<String> get problem$ => Observable(_problem$.stream);
+  Observable<DateTime> get appointmnetDate$ =>
+      Observable(_appointmentDate$.stream);
+  Observable<String> get comment$ => Observable(_comment$.stream);
+  Observable<List<Appointment>> get userAppointments$ =>
+      Observable(_userAppointments$.stream);
   Observable<List<Brand>> get brands$ => Observable(
         _fsService.brands$.map(
           (query) =>
@@ -57,6 +67,13 @@ class Bloc {
             print(fbUser.uid);
             final User user = User.fromJson(doc.data);
             _user$.sink.add(user);
+            if (user.appointment != null) {
+              _comment$.sink.add(user.appointment.comment);
+              _problem$.sink.add(user.appointment.problem);
+              _selectedCar$.sink.add(user.appointment.car);
+              _appointmentDate$.sink.add(user.appointment.date);
+              _authState$.sink.add(AuthState.InitialReserved);
+            }
           });
         }
       },
@@ -142,6 +159,10 @@ class Bloc {
     _selectedCar$.sink.add(car);
   }
 
+  void setComment(String comment) {
+    _comment$.sink.add(comment);
+  }
+
   void selectBrand(Brand brand) async {
     _selectedBrand$.sink.add(brand);
     QuerySnapshot query =
@@ -179,6 +200,48 @@ class Bloc {
     return await x;
   }
 
+  Future<void> setAppointment() async {
+    QuerySnapshot query =
+        await _fsService.getFutureAppointmentsRef().getDocuments();
+    DateTime nextPossibleDate = DateTime.now().add(Duration(days: 2));
+    query.documents.forEach((doc) {
+      Appointment appointment = Appointment.fromJson(doc.data);
+      if (appointment.date.isAfter(nextPossibleDate) ||
+          ((appointment.date.day == nextPossibleDate.day) &&
+              (nextPossibleDate.hour == appointment.date.hour))) {
+        nextPossibleDate = appointment.date;
+      }
+    });
+    nextPossibleDate = nextPossibleDate.add(Duration(hours: 2));
+    _appointmentDate$.sink.add(nextPossibleDate);
+    DocumentReference docRef = _fsService.getAppointmentsRef().document();
+    Map<String, dynamic> payload = {
+      'uid': docRef.documentID,
+      'date': nextPossibleDate.millisecondsSinceEpoch,
+      'userUid': _user$.value.uid,
+      'car': _selectedCar$.value.toJson(),
+      'comment': _comment$.value,
+      'problem': _problem$.value,
+    };
+    await docRef.setData(payload);
+    await _fsService
+        .getUserDocRef(_user$.value.uid)
+        .updateData({'appointment': payload});
+    _authState$.sink.add(AuthState.Reserved);
+  }
+
+  Future<void> cancelAppointment() async {
+    await _fsService
+        .getUserDocRef(_user$.value.uid)
+        .updateData({'appointment': null});
+    _authState$.sink.add(AuthState.Authenticated);
+    _problem$.sink.add(null);
+    _selectedCar$.sink.add(null);
+    _selectedBrand$.sink.add(null);
+    _appointmentDate$.sink.add(null);
+    _comment$.sink.add(null);
+  }
+
   void dispose() {
     _authState$.close();
     _error$.close();
@@ -193,6 +256,9 @@ class Bloc {
     _selectedCar$.close();
     _selectedBrand$.close();
     _carModels$.close();
+    _comment$.close();
+    _appointmentDate$.close();
+    _userAppointments$.close();
   }
 
   void _errorCheck() {
@@ -267,4 +333,4 @@ class Bloc {
   }
 }
 
-enum AuthState { Authenticated, Unauthenticated }
+enum AuthState { Authenticated, Unauthenticated, Reserved, InitialReserved }

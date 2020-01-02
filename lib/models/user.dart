@@ -1,3 +1,4 @@
+import 'package:grad/models/appointment.dart';
 import 'package:grad/models/brand.dart';
 import 'package:grad/models/car_model.dart';
 
@@ -9,6 +10,7 @@ class User {
   final String _email;
   final String _phonenumber;
   final String _title;
+  final Appointment _appointment;
   final List<Car> _cars;
 
   String get uid => _uid;
@@ -17,6 +19,7 @@ class User {
   String get phoneNumber => _phonenumber;
   String get title => _title;
   List<Car> get cars => _cars;
+  Appointment get appointment => _appointment;
 
   User(
       {String name,
@@ -24,12 +27,14 @@ class User {
       String email,
       String phoneNumber,
       String title,
+      Appointment appointment,
       List<Car> cars})
       : _name = name,
         _email = email,
         _phonenumber = phoneNumber,
         _title = title,
         _cars = cars,
+        _appointment = appointment,
         _uid = uid;
 
   User copyWith(
@@ -37,6 +42,7 @@ class User {
       String email,
       String phoneNumber,
       String title,
+      Appointment appointment,
       List<Car> cars}) {
     return User(
       name: name ?? this._name,
@@ -44,6 +50,7 @@ class User {
       phoneNumber: phoneNumber ?? this._phonenumber,
       title: title ?? this._title,
       cars: cars ?? this._cars,
+      appointment: appointment ?? this._appointment,
     );
   }
 
@@ -55,6 +62,7 @@ class User {
       email: json['email'],
       phoneNumber: json['phoneNumber'],
       title: json['title'],
+      appointment: Appointment.fromJson(json['appointment']),
       cars: json['cars'] == null
           ? null
           : List.castFrom<dynamic, Car>(json['cars'].map((obj) {

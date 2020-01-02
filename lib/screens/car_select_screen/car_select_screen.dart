@@ -3,6 +3,7 @@ import 'package:grad/blocs/bloc.dart';
 import 'package:grad/common/custom_scaffold.dart';
 import 'package:grad/models/user.dart';
 import 'package:grad/screens/brand_select_screen/brand_select_screen.dart';
+import 'package:grad/screens/confirm_screen/confirm_screen.dart';
 import 'package:provider/provider.dart';
 
 class CarSelectScreen extends StatelessWidget {
@@ -57,21 +58,39 @@ class CarSelectScreen extends StatelessWidget {
                   ),
                   ...user.cars
                       .map(
-                        (car) => Center(
-                          child: CarCard(
-                            model: car.model.name,
-                            make: car.brand.name,
-                            photoUrl: car.model.photoUrl,
+                        (car) => GestureDetector(
+                          onTap: () {
+                            bloc.selectCar(car);
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (_) => ConfirmScreen(),
+                            ));
+                          },
+                          child: Center(
+                            child: CarCard(
+                              model: car.model.name,
+                              make: car.brand.name,
+                              photoUrl: car.model.photoUrl,
+                            ),
                           ),
                         ),
                       )
                       .toList(),
-                  Center(
-                    child: CarCard(
-                        make: "Add   ",
-                        model: "Add a car",
-                        photoUrl:
-                            "https://clipartion.com/wp-content/uploads/2015/12/car-clipart-free-830x305.png"),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => BrandSelectScreen(),
+                        ),
+                      );
+                    },
+                    child: Center(
+                      child: CarCard(
+                          make: "Add   ",
+                          model: "Add a car",
+                          photoUrl:
+                              "https://clipartion.com/wp-content/uploads/2015/12/car-clipart-free-830x305.png"),
+                    ),
                   ),
                 ],
               );
@@ -138,42 +157,35 @@ class CustomCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (_) => BrandSelectScreen()));
-      },
-      child: Container(
-        margin: const EdgeInsets.only(top: 20),
-        decoration: BoxDecoration(
-          boxShadow: [
-            BoxShadow(
-                color: colors == null
-                    ? Theme.of(context).buttonColor
-                    : colors.first,
-                blurRadius: 2),
-          ],
-          gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: colors ??
-                  [
-                    Theme.of(context).buttonColor,
-                    Theme.of(context).cardColor,
-                  ]),
-          borderRadius: BorderRadius.circular(20),
-        ),
-        width: width,
-        height: height,
-        child: Stack(
-          children: <Widget>[
-            child,
-            Align(
-              alignment: Alignment.bottomRight,
-              child: _ArrowIcon(),
-            ),
-          ],
-        ),
+    return Container(
+      margin: const EdgeInsets.only(top: 20),
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+              color:
+                  colors == null ? Theme.of(context).buttonColor : colors.first,
+              blurRadius: 2),
+        ],
+        gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: colors ??
+                [
+                  Theme.of(context).buttonColor,
+                  Theme.of(context).cardColor,
+                ]),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      width: width,
+      height: height,
+      child: Stack(
+        children: <Widget>[
+          child,
+          Align(
+            alignment: Alignment.bottomRight,
+            child: _ArrowIcon(),
+          ),
+        ],
       ),
     );
   }

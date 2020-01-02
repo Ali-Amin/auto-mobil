@@ -12,6 +12,21 @@ class Car {
       : _brand = brand,
         _model = model;
 
+  Map<String, dynamic> toJson() {
+    return {
+      'brand': {
+        'name': brand.name,
+        'uid': brand.uid,
+        'photoUrl': brand.photoUrl
+      },
+      'model': {
+        'name': model.name,
+        'uid': model.uid,
+        'photoUrl': model.photoUrl
+      }
+    };
+  }
+
   factory Car.from(Brand brand, CarModel model) {
     return Car(brand: brand, model: model);
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:grad/blocs/bloc.dart';
+import 'package:grad/screens/confirm_screen/confirm_screen.dart';
 import 'package:grad/screens/problem/problem.dart';
 import 'package:grad/screens/screens.dart';
 import 'package:provider/provider.dart';
@@ -15,6 +16,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         routes: {"/": _buildHome},
         theme: ThemeData(
+          fontFamily: "Orbitron",
           primaryColor: Color(0xFF1F1E5A),
           accentColor: Color(0xFFFFDE00),
           primaryColorDark: Color(0xFFFFA500),
@@ -44,6 +46,9 @@ class MyApp extends StatelessWidget {
             return LoginScreen();
           case AuthState.Authenticated:
             return ProblemScreen();
+          case AuthState.Reserved:
+          case AuthState.InitialReserved:
+            return ConfirmScreen();
           default:
             return Scaffold(
               body: Center(
