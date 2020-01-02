@@ -14,6 +14,7 @@ class MyApp extends StatelessWidget {
     return Provider<Bloc>.value(
       value: bloc,
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         routes: {"/": _buildHome},
         theme: ThemeData(
           fontFamily: "Orbitron",
