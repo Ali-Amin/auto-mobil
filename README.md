@@ -6,7 +6,7 @@
 <img src="https://firebasestorage.googleapis.com/v0/b/grad-f304f.appspot.com/o/1.png?alt=media&token=1df2c39e-0542-4ca4-aad3-fd07122ea38d" alt="click here to view photo" width=240 height=480>    
 
 ### Register Account
-<img src="https://firebasestorage.googleapis.com/v0/b/grad-f304f.appspot.com/o/2.png?alt=media&token=e4eb065d-14ff-4333-9817-5c309f9ec99f" alt="click here to view photo width=240 height=480>
+<img src="https://firebasestorage.googleapis.com/v0/b/grad-f304f.appspot.com/o/2.png?alt=media&token=e4eb065d-14ff-4333-9817-5c309f9ec99f" alt="click here to view photo" width=240 height=480>
 
 ### Choose Car Problem
 <img src="https://firebasestorage.googleapis.com/v0/b/grad-f304f.appspot.com/o/3.png?alt=media&token=588e1167-5ba1-4e20-b9b5-bd9ec60577f5" alt="alt text" width=240 height=480>  <img src="https://firebasestorage.googleapis.com/v0/b/grad-f304f.appspot.com/o/4.png?alt=media&token=a22f5e9c-e210-48ed-8848-c04154ec60e8" alt="click here to view photo" width=240 height=480>
