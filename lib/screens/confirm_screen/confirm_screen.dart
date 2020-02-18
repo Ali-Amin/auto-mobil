@@ -121,7 +121,7 @@ class _ConfirmScreenState extends State<ConfirmScreen> {
                     child: StreamBuilder<String>(
                         stream: bloc.comment$,
                         builder: (context, snapshot) {
-                          if (snapshot.hasData) {
+                          if (snapshot.hasData && !appointmentNotSet) {
                             controller.text = snapshot.data;
                           }
                           return TextField(
