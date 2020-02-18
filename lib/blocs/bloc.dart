@@ -219,7 +219,7 @@ class Bloc {
       'uid': docRef.documentID,
       'date': nextPossibleDate.millisecondsSinceEpoch,
       'userUid': _user$.value.uid,
-      'car': _selectedCar$.value.toJson(),
+      'car': _selectedCar$.value?.toJson(),
       'comment': _comment$.value,
       'problem': _problem$.value,
     };
