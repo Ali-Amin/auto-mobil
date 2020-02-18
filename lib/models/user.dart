@@ -64,7 +64,7 @@ class User {
       title: json['title'],
       appointment: Appointment.fromJson(json['appointment']),
       cars: json['cars'] == null
-          ? null
+          ? []
           : List.castFrom<dynamic, Car>(json['cars'].map((obj) {
               Brand brand = Brand.fromJson(obj['brand']);
               CarModel model = CarModel.fromJson(obj['model']);
